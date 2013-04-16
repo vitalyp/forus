@@ -10,6 +10,8 @@ PUSHER_CHANNEL_NAME = 'game-room'
 PUSHER_EVENT_WAIT = 'client-wait-for-opponent'
 PUSHER_EVENT_START = 'client-start-to-play'
 PUSHER_EVENT_INTERRUPTED = 'client-game-room-closed'
+PUSHER_EVENT_PLAYER_TURN = 'client-game-room-player-turn'
+PUSHER_EVENT_GAME_FINISHED = 'client-game-finished'
 PUSHER_EVENT_ALERT = 'client-alert'
 
 # New user will be rejected and notified with 'room is full' message,  if user sessions count reached this value:

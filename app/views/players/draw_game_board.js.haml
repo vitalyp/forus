@@ -1,6 +1,6 @@
-$('.notification').hide();
-
-$('.game_board').html("#{ escape_javascript(render(:partial => 'game_board', :locals => {rows: @rows, cols: @cols, my_turn: @my_turn, session_id: @session_id, my_color: @my_color})) }");
+//$('.notifications-container').fadeOut();
+$('.create-room-panel').fadeOut();
+$('.game-board').html("#{ escape_javascript(render(:partial => 'game_board', :locals => {rows: @rows, cols: @cols, my_turn: @my_turn, session_id: @session_id, my_color_class: @my_color_class})) }");
 
 
 

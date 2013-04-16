@@ -1,14 +1,18 @@
 %script{:src => 'http://js.pusher.com/2.0/pusher.min.js', :type => 'text/javascript'}
-%input#user_session_token{:type => 'hidden', :value => "#{@session_id}"}
+%input#user_session_token{:type => 'hidden', :value => "#{@current_user_id}"}
 
 .notifications-container.for-popup-messaging
 
+live messenger:
+%input#message_text{:type => 'text', :value => "", :placeholder => 'type chat message here'}
+%input#message_button{:type => 'button', :value => 'Send message to all!'}
+
 .game-board.hidden-initially
 
-- if (@room_state == GAME_ROOM_STATE_PLAYING || @current_user)
+- if (@room_state == GAME_ROOM_STATE_PLAYING) # || @current_user)
   /You appears inside ready game room! Start to play!
   :javascript
-    drawGameBoard
+    drawGameBoard();
 
 - else
   /Controls panel, for new game room creating
@@ -40,6 +44,11 @@
   channel.bind("#{PUSHER_EVENT_ALERT}", alertEvent);
   channel.bind('#{PUSHER_EVENT_WAIT}', waitingEvent);
   channel.bind('#{PUSHER_EVENT_START}', startingEvent);
+  channel.bind("#{PUSHER_EVENT_INTERRUPTED}", interruptedEvent);
+  channel.bind("#{PUSHER_EVENT_PLAYER_TURN}", playerTurnEvent);
+  channel.bind("#{PUSHER_EVENT_GAME_FINISHED}", gameFinishedEvent);
+
+
 
   //Notification pusher event that triggers, when one player sends a message to another
   function alertEvent(data) {
@@ -52,15 +61,90 @@
   }
   //Notification pusher event, that triggers when second player connecting to game room
   function startingEvent(data) {
+    showNotification('Game started!');
     drawGameBoard();
   }
+  //Notification Pusher event that triggered, once player kick the session in browser (F5 or close )
+  function interruptedEvent(data) {
+    showNotification('Game interrupted!');
+    drawGameBoard();
+  }
+  //Notification Pusher event that triggered, when game is finished
+  function gameFinishedEvent(data) {
+
+    if (data.winner != 'nobody') {
+      cols = data.cols
+      cell_id1 = data.cells[0][0] + data.cells[0][1]*cols
+      cell_id2 = data.cells[1][0] + data.cells[1][1]*cols
+      cell_id3 = data.cells[2][0] + data.cells[2][1]*cols
+      cell_id4 = data.cells[3][0] + data.cells[3][1]*cols
+      $("div[data-cell_id="+cell_id1+"]").addClass('green');
+      $("div[data-cell_id="+cell_id2+"]").addClass('green');
+      $("div[data-cell_id="+cell_id3+"]").addClass('green');
+      $("div[data-cell_id="+cell_id4+"]").addClass('green');
+    }
+
+    console.log(data.cells);
+    $('.cell').addClass('disabled');
+    showNotification('Game finished!');
+    console.log('data.winner - ' + data.winner)
+
+    if (data.winner == $('#user_session_token').val()) {
+      showNotification('you win!')
+      return;
+    }
+    if (data.winner == 'nobody') {
+      alert('Nobody win!');
+      return;
+    }
+    alert('You looooose!');
+    showNotification('you loose!')
+  }
+
+  //Notification pusher event that triggered, once player click on the free cell
+  function playerTurnEvent(data) {
+    //x = data.cell[0]
+    //y = data.cell[1]
+    cell_id = data.cell_id
+    console.log('cell_id = ' + cell_id)
+    turn_elem = $('.cell[data-cell_id = '+cell_id+']');
+    $(turn_elem).addClass(data.color_class);
+    $(turn_elem).addClass('selected');
+
+
+    console.log('test!');
+    console.log(data.id);
+    console.log($('#user_session_token').val());
+    console.log($('#user_session_token'));
+    console.log('ba!');
+
+    if (data.id == $('#user_session_token').val() ) {
+
+      opponentTurn(data);
+    } else {
+      myTurn(data);
+    }
+  }
+
+  function opponentTurn(data) {
+    $('.my_turn').hide();
+    $('.opponent_turn').show();
+    $('.cell').addClass('disabled');
+  }
+
+  function myTurn(data) {
+    console.log(data);
+    $('.my_turn').show();
+    $('.opponent_turn').hide();
+    $('.cell').removeClass('disabled');
+  }
+
 
   //Helper function: display simple notification message
   function showNotification(message) {
     //#$('.notifications-container').slideUp();
     $('.notifications-container').html(message);
-    $('notifications-container').fadeIn();
-    console.log(123);
+    $('.notifications-container').fadeIn();
   }
 
   //Helper function: draw game board of current room
@@ -83,13 +167,21 @@
 
   //Attempt to trigger `user disconnected` event
   $(window).bind('beforeunload', function(){
-    alert('aaa');
     sendLogoutSignal();
   });
 
   //Document ready, bind event method:
   jQuery(document).ready(function($) {
+
+   $.post('/players/client_ready');
+
    $(".create-room").click(function(){
      createRoomSignal();
+   });
+
+   $("#message_button").click(function(){
+   message = $('#message_text').val();
+   $('#message_text').val('');
+     $.post('/players/post_alert', { message: message })
    });
   });

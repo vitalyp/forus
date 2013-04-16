@@ -7,6 +7,8 @@ FoRus::Application.routes.draw do
 
       post :create
 
+      post :client_ready
+
       post :logout_user
 
       post :draw_game_board
@@ -14,6 +16,7 @@ FoRus::Application.routes.draw do
       post :player_turn
 
       get :alert
+      post :post_alert
 
     end
 

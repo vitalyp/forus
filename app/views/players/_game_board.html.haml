@@ -1,10 +1,20 @@
-= my_turn ? "Your move" : "Opponent move"
+
+.my_turn{:style=>"#{my_turn ? '' : 'display:none'}" }
+  Your move
+.opponent_turn{:style=>"#{my_turn ? 'display:none' : '' }" }
+  Opponent move
+
+
 
 %div.board_wrapper
+  - cells_count = rows.to_i * cols.to_i
   - rows.to_i.times do |y|
     %br
     - cols.to_i.times do |x|
-      %div.cell{'data-user'=>"#{session_id}", :x => x, :y => y}
+      - cell_x = x
+      - cell_y = rows.to_i - y - 1
+      - cell_id = cell_x + cell_y*cols.to_i
+      %div.cell{'data-user'=>"#{session_id}", :x => cell_x, :y =>cell_y, 'data-cell_id' => cell_id }
 
 :javascript
 
@@ -19,15 +29,22 @@
       function () {
         // Skip selected and disabled cells:
         if (!$(this).hasClass('selected') && !$(this).hasClass('disabled')) {
-          $(this).addClass("#{my_color}");
+          $(this).addClass("#{my_color_class}");
         }
       },
       function () {
-        $(this).removeClass("#{my_color}");
+        if (!$(this).hasClass('selected')) {
+          $(this).removeClass("#{my_color_class}");
+        }
       }
     );
     $('.cell').click(function(){
-      $.post('/players/player_turn', {x: $(this).attr('x'), y: $(this).attr('y')   })
+      if ($(this).hasClass('disabled')) {
+        //nothingto do
+      } else {
+        $.post('/players/player_turn', {x: $(this).attr('x'), y: $(this).attr('y')   })
+      }
+
     });
   });
 
