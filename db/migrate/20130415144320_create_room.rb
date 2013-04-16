@@ -5,6 +5,7 @@ class CreateRoom < ActiveRecord::Migration
       t.string :rows
       t.string :cols
       t.string :state
+      t.string :active_user
       t.string :grid
 
       t.timestamps

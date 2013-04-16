@@ -3,6 +3,46 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 
+.notifications-container {
+  font-size: 30px;
+  color: red;
+}
+
+.create-room-panel {
+  padding:10px;
+  margin: 10px;
+  border: 10px solid lightgrey;
+
+  .input-title {
+    display: inline-block;
+    width: 130px;
+  }
+}
+
+.game-board {
+
+}
+
+/*not the best place to put this*/
+.cell {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 1px solid blue;
+  cursor: pointer;
+}
+
+.selected_cell_1 {
+  background-color: red;
+}
+
+.selected_cell_2 {
+  background-color: black;
+
+}
+
+
+
 .selected {
  background-color: black;
 }

@@ -11,22 +11,3 @@
  *= require_self
  *= require_tree .
  */
-
-
-/*not the best place to put this*/
-.cell {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  border: 1px solid blue;
-  cursor: pointer;
-}
-
-.selected_cell_1 {
-  background-color: red;
-}
-
-.selected_cell_2 {
-    background-color: black;
-
-}

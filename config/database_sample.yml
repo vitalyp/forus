@@ -1,24 +1,30 @@
-development:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: foRus
-  pool: 5
-  username: root
-  password: toor
-  host: 127.0.0.1
-  socket: mysql
-  port: 3306
+# Sample database config. Make a copy, named 'database.yml', and never push them to repository
 
+#development:
+#  database: foRus
+#  username: ***
+#  password: ***
+  
+#  adapter: mysql2
+#  socket: mysql
+#  port: 3306
+  
+#  encoding: utf8
+#  reconnect: false
+#  host: 127.0.0.1
+#  pool: 5
 
-production:
-  adapter: mysql2
-  encoding: utf8
-  reconnect: false
-  database: foRus
-  pool: 5
-  username: root
-  password: toor
-  host: 127.0.0.1
-  socket: mysql
-  port: 3306
+#production:
+#  database: foRus
+#  username: ***
+#  password: ***
+#
+#  adapter: mysql2
+#  socket: mysql
+#  port: 3306
+#
+#  encoding: utf8
+#  reconnect: false
+#  host: 127.0.0.1
+#  pool: 5
+#

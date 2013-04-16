@@ -4,11 +4,17 @@ FoRus::Application.routes.draw do
 
   resources :players do
     collection do
-      get :push
+
       post :create
+
       post :logout_user
+
       post :draw_game_board
+
       post :player_turn
+
+      get :alert
+
     end
 
     end

@@ -17,9 +17,10 @@ ActiveRecord::Schema.define(:version => 20130415144320) do
     t.string   "rows"
     t.string   "cols"
     t.string   "state"
+    t.string   "active_user"
     t.string   "grid"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.datetime "created_at",  :null => false
+    t.datetime "updated_at",  :null => false
   end
 
   create_table "users", :force => true do |t|
