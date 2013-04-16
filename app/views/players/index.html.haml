@@ -1,0 +1,94 @@
+%script{:src => "http://js.pusher.com/2.0/pusher.min.js", :type => "text/javascript"}
+%input{:type => "hidden", :value => "#{@session_id}"}
+
+- unless @game_state == PlayersController::STATE_PLAYING
+  .notification{:style => "font-size: 20px;"}
+
+  .create_room_container{:style => "padding:10px; margin: 10px; border: 10px solid lightgrey;"}
+    You is a first user. Please, create a session:
+    %br
+    %span{:style => "display: inline-block;width: 90px;"}
+      Row size:
+    %input.rows{:type => "text", :value => ""}
+    %br
+    %span{:style => "display: inline-block;width: 90px;"}
+      Columns size:
+    %input.cols{:type => "text", :value => ""}
+    %input.create_room{:type => "button", :value => "create"}
+- else
+  :javascript
+    $.post('/players/draw_game_board.js')
+
+/render later with ajax
+.game_board
+
+
+:javascript
+
+  // Enable pusher logging - don't include this in production
+  Pusher.log = function(message) {
+    if (window.console && window.console.log) window.console.log(message);
+  };
+  WEB_SOCKET_DEBUG = true;
+  // End loggin implementation
+
+  var pusher = new Pusher("#{PlayersController::API_KEY}");
+  var channel = pusher.subscribe("#{PlayersController::CHANNEL_NAME}");
+
+
+  channel.bind('client-event', clientEvent);
+
+  channel.bind('#{PlayersController::WAITING}', waitingEvent);
+  channel.bind('#{PlayersController::START}', startingEvent);
+
+
+  function clientEvent(data) {
+    if (data.type == 'user-disconnected' && data.id == "#{@session_id}") {
+      alert("your session will be destroyed");
+    } else {
+      alert(data.message);
+    }
+  }
+  function waitingEvent(data) {
+    $('.create_room_container').fadeOut();
+    $('.notification').fadeOut();
+    $('.notification').html('Waiting for guest connecting..');
+    $('.notification').fadeIn();
+  }
+  function startingEvent(data) {
+    $.post('/players/draw_game_board.js')
+  }
+
+  $(window).bind('beforeunload', function(){
+    $.post('/players/logout_user')
+  });
+
+
+  jQuery(document).ready(function($) {
+   $(".create_room").click(function(){
+     // create REST
+     $.post('players', {rows: $('.rows').val(), cols: $('.cols').val()   })
+   });
+  });
+
+
+
+
+
+
+  //function subscriptionSuccess(members) {
+  //  // we won't use members here
+  //  channel.trigger('client-event', {"message": "message world"});
+  // }
+  //channel.bind("#{GameEvents::OPPONENT_CONNECTED}", function(data) {
+  //  alert('Opponent connected');
+  //});
+  //channel.bind("#{GameEvents::OPPONENT_DISCONNECTED}", function(data) {
+  //    alert('Opponent disconnected');
+  //});
+
+  //$(window).bind('beforeunload', function() {
+  //  channel.trigger("#{GameEvents::OPPONENT_DISCONNECTED}", { your: 'hello' });
+  //});
+  //channel.bind('pusher:subscription_succeeded', function() {
+  //});

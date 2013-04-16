@@ -1,0 +1,20 @@
+- require 'GameEvents'
+
+%script{:src => "http://js.pusher.com/2.0/pusher.min.js", :type => "text/javascript"}
+:javascript
+
+  // Enable pusher logging - don't include this in production
+  Pusher.log = function(message) {
+    if (window.console && window.console.log) window.console.log(message);
+  };
+  WEB_SOCKET_DEBUG = true;
+  // End loggin implementation
+
+  var pusher = new Pusher("#{PlayersController::API_KEY}");
+  var channel = pusher.subscribe("#{PlayersController::CHANNEL_NAME}");
+
+  //channel.trigger("#{GameEvents::OPPONENT_CONNECTED}", { your: 'hello!' });channel.trigger('sd', { your: data });
+
+  //channel.trigger("#{GameEvents::OPPONENT_CONNECTED}", {:message => 'hello world'})
+  //channel.trigger("#{GameEvents::OPPONENT_CONNECTED}", {:message => 'opponent connected'})
+

@@ -1,0 +1,34 @@
+= my_turn ? "Your move" : "Opponent move"
+
+%div.board_wrapper
+  - rows.to_i.times do |y|
+    %br
+    - cols.to_i.times do |x|
+      %div.cell{'data-user'=>"#{session_id}", :x => x, :y => y}
+
+:javascript
+
+  jQuery(document).ready(function($) {
+
+    // Disable cells for initial turn:
+    if ("#{my_turn}" == 'false') {
+      $('.cell').addClass('disabled')
+    }
+
+    $('.cell').hover(
+      function () {
+        // Skip selected and disabled cells:
+        if (!$(this).hasClass('selected') && !$(this).hasClass('disabled')) {
+          $(this).addClass("#{my_color}");
+        }
+      },
+      function () {
+        $(this).removeClass("#{my_color}");
+      }
+    );
+    $('.cell').click(function(){
+      $.post('/players/player_turn', {x: $(this).attr('x'), y: $(this).attr('y')   })
+    });
+  });
+
+

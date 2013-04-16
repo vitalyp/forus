@@ -1,0 +1,14 @@
+# SQLite version 3.x
+
+development:
+  adapter: mysql2
+  database: foRus
+  pool: 5
+  timeout: 5000
+
+
+production:
+  adapter: mysql2
+  database: foRus
+  pool: 5
+  timeout: 5000
