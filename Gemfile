@@ -7,10 +7,10 @@ gem 'mysql2'
 gem 'haml'
 
 
-gem 'faye'
+#gem 'faye'
 
 gem 'pusher'
-gem 'proxylocal'
+#gem 'proxylocal'
 
 group :assets do
   gem 'sass-rails',   '~> 3.2.3'

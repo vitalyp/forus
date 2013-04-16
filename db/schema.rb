@@ -14,27 +14,20 @@
 ActiveRecord::Schema.define(:version => 20130415144320) do
 
   create_table "rooms", :force => true do |t|
-    t.string   "state"
     t.string   "rows"
     t.string   "cols"
-    t.string   "current_user"
-    t.string   "board_state"
-    t.string   "user_1"
-    t.string   "user_2"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-  end
-
-  create_table "states", :force => true do |t|
     t.string   "state"
+    t.string   "grid"
     t.datetime "created_at", :null => false
     t.datetime "updated_at", :null => false
   end
 
   create_table "users", :force => true do |t|
     t.string   "user_id"
-    t.datetime "created_at", :null => false
-    t.datetime "updated_at", :null => false
+    t.string   "user_name"
+    t.string   "chat_message"
+    t.datetime "created_at",   :null => false
+    t.datetime "updated_at",   :null => false
   end
 
 end
